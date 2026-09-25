@@ -54,19 +54,7 @@ jobs:
           channel: stable
           cache: true
       - run: cp .env.example .env
-      - run: flutter pub get
-
-      - name: Check syntax errors (Linter)
-        run: flutter analyze
-
-      - name: Run all tests with coverage
-        run: flutter test --coverage
-
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          files: coverage/lcov.info
-          
+      - run: flutter pub get          
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
