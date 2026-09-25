@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/error/failure_l10n.dart';
 import '../../../core/result/result.dart';
 import '../../../core/widgets/snackbars.dart';
+import '../../../l10n/l10n.dart';
 import 'auth_controller.dart';
 import 'validators.dart';
 import 'widgets/auth_form_scaffold.dart';
@@ -35,14 +37,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final result = await ref.read(authControllerProvider.notifier).signIn(_email.text, _password.text);
     if (!mounted) return;
     setState(() => _loading = false);
-    if (result case Failed(:final failure)) showErrorSnackBar(context, failure.message);
+    if (result case Failed(:final failure)) showErrorSnackBar(context, failure.message(context.l10n));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AuthFormScaffold(
-      title: 'Connexion',
-      subtitle: 'Retrouvez la météo de vos villes',
+      title: l10n.loginTitle,
+      subtitle: l10n.loginSubtitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -54,17 +57,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.mail_outline)),
-              validator: validateEmail,
+              decoration: InputDecoration(labelText: l10n.emailLabel, prefixIcon: const Icon(Icons.mail_outline)),
+              validator: (v) => validateEmail(v, l10n),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             TextFormField(
               key: const Key('login_password'),
               controller: _password,
               obscureText: true,
               autofillHints: const [AutofillHints.password],
-              decoration: const InputDecoration(labelText: 'Mot de passe', prefixIcon: Icon(Icons.lock_outline)),
-              validator: validatePassword,
+              decoration: InputDecoration(labelText: l10n.passwordLabel, prefixIcon: const Icon(Icons.lock_outline)),
+              validator: (v) => validatePassword(v, l10n),
               onFieldSubmitted: (_) => _submit(),
             ),
             const SizedBox(height: 24),
@@ -72,12 +75,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               onPressed: _loading ? null : _submit,
               child: _loading
                   ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Text('Se connecter'),
+                  : Text(l10n.loginButton),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => context.go(Routes.register),
-              child: const Text('Pas de compte ? Créer un compte'),
+              child: Text(l10n.goToRegister),
             ),
           ],
         ),

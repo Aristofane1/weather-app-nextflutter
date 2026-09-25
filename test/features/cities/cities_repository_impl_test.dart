@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weather_app/core/error/failure.dart';
+import 'package:weather_app/core/error/failure_l10n.dart';
 import 'package:weather_app/features/cities/data/cities_remote_data_source.dart';
 import 'package:weather_app/features/cities/data/cities_repository_impl.dart';
 import 'package:weather_app/features/cities/domain/city.dart';
 
 import '../../helpers/fakes.dart';
+import '../../helpers/localized_app.dart';
 
 class MockCitiesRemote extends Mock implements CitiesRemoteDataSource {}
 
@@ -61,11 +63,38 @@ void main() {
     expect(r.dataOrNull!.single.subtitle, 'Ile-de-France, FR');
   });
 
+  test('search drops duplicate locations, keeping the first', () async {
+    final lyon = {'name': 'Lyon', 'country': 'FR', 'state': 'Auvergne-Rhône-Alpes', 'lat': 45.7578, 'lon': 4.8320};
+    when(() => remote.search('Lyon')).thenAnswer((_) async => [
+          lyon,
+          {...lyon, 'lat': 45.7579},
+          {'name': 'Lyon', 'country': 'US', 'state': 'Mississippi', 'lat': 34.2176, 'lon': -90.5409},
+        ]);
+    final cities = (await repo.search('Lyon')).dataOrNull!;
+    expect(cities, hasLength(2));
+    expect(cities.first.lat, 45.7578);
+    expect(cities.last.country, 'US');
+  });
+
+  test('search drops results with the same label (name, state, country), keeping the first', () async {
+    // Cas réel OWM « Lyon » : même libellé, coordonnées à ~7 km (hors tolérance de sameLocation).
+    final lyon = {'name': 'Lyon', 'country': 'FR', 'state': 'Auvergne-Rhône-Alpes', 'lat': 45.7578, 'lon': 4.8320};
+    when(() => remote.search('Lyon')).thenAnswer((_) async => [
+          lyon,
+          {...lyon, 'lat': 45.6963, 'lon': 4.7359},
+          {'name': 'Lyon', 'country': 'US', 'state': 'Mississippi', 'lat': 34.2176, 'lon': -90.5409},
+        ]);
+    final cities = (await repo.search('Lyon')).dataOrNull!;
+    expect(cities, hasLength(2));
+    expect(cities.first.lat, 45.7578);
+    expect(cities.last.country, 'US');
+  });
+
   test('addFavorite offline returns offlineAction failure', () async {
     when(() => network.isConnected).thenAnswer((_) async => false);
     final r = await repo.addFavorite(paris);
     expect(r.failureOrNull, isA<OfflineActionFailure>());
-    expect(r.failureOrNull!.message, 'Action impossible hors ligne');
+    expect(r.failureOrNull!.message(l10nFr), 'Action impossible hors ligne');
     verifyNever(() => remote.addFavorite(any()));
   });
 

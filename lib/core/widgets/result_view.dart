@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/l10n.dart';
 import '../error/error_mapper.dart';
+import '../error/failure_l10n.dart';
 import '../result/result.dart';
 import 'error_view.dart';
 import 'scrollable_fill.dart';
@@ -31,14 +33,14 @@ class ResultView<T> extends StatelessWidget {
     if (result != null) {
       return switch (result) {
         Success<T>(:final data) => builder(context, data),
-        Failed<T>(:final failure) => _error(failure.message),
+        Failed<T>(:final failure) => _error(context, failure.message(context.l10n)),
       };
     }
-    if (value.hasError) return _error(toFailure(value.error!).message);
+    if (value.hasError) return _error(context, toFailure(value.error!).message(context.l10n));
     return skeleton;
   }
 
-  Widget _error(String message) {
+  Widget _error(BuildContext context, String message) {
     final view = ErrorView(message: message, onRetry: onRetry);
     return scrollableError ? ScrollableFill(child: view) : view;
   }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/widgets/result_view.dart';
+import '../../../l10n/l10n.dart';
 import 'weather_providers.dart';
 import 'widgets/current_weather_card.dart';
-import 'widgets/daily_forecast_tile.dart';
+import 'widgets/daily_forecast_card.dart';
 import 'widgets/weather_skeletons.dart';
 
 class CityDetailScreen extends ConsumerWidget {
@@ -28,7 +29,7 @@ class CityDetailScreen extends ConsumerWidget {
           await ref.read(current.future);
         },
         child: ListView(
-          padding: const EdgeInsets.only(bottom: 24),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
             ResultView(
               value: ref.watch(current),
@@ -37,16 +38,14 @@ class CityDetailScreen extends ConsumerWidget {
               builder: (_, weather) => CurrentWeatherCard(weather: weather),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text('Prévisions sur 5 jours', style: Theme.of(context).textTheme.titleMedium),
+              padding: const EdgeInsets.fromLTRB(4, 24, 4, 12),
+              child: Text(context.l10n.forecastTitle, style: Theme.of(context).textTheme.titleMedium),
             ),
             ResultView(
               value: ref.watch(forecast),
               skeleton: const ForecastSkeleton(),
               onRetry: () => ref.invalidate(forecast),
-              builder: (_, days) => Column(
-                children: [for (final day in days) DailyForecastTile(forecast: day)],
-              ),
+              builder: (_, days) => DailyForecastCard(days: days),
             ),
           ],
         ),

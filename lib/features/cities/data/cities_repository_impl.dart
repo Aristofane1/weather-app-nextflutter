@@ -27,7 +27,19 @@ class CitiesRepositoryImpl extends BaseRepository implements CitiesRepository {
   Future<Result<List<City>>> search(String query) async {
     final q = query.trim();
     if (q.isEmpty) return const Success(<City>[]);
-    return guard(() async => _parseCities(await remote.search(q)));
+    return guard(() async => _dedupe(_parseCities(await remote.search(q))));
+  }
+
+  /// Le géocodage OWM renvoie parfois deux fois la même ville : on garde la première.
+  /// Doublon = même position, ou même libellé affiché (ex. « Lyon » renvoyée deux fois
+  /// à ~7 km d'écart, indiscernables pour l'utilisateur).
+  static List<City> _dedupe(List<City> cities) {
+    final unique = <City>[];
+    for (final city in cities) {
+      final duplicate = unique.any((u) => u.sameLocation(city) || (u.name == city.name && u.subtitle == city.subtitle));
+      if (!duplicate) unique.add(city);
+    }
+    return unique;
   }
 
   @override

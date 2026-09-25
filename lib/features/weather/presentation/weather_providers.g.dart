@@ -66,7 +66,7 @@ final class CurrentWeatherProvider
   }
 }
 
-String _$currentWeatherHash() => r'825130cad080205b7584da64595f642c7a2e1b21';
+String _$currentWeatherHash() => r'79c5e9229e1eae18dd4c11242136078bd9fd2a12';
 
 final class CurrentWeatherFamily extends $Family
     with
@@ -147,7 +147,7 @@ final class DailyForecastProvider
   }
 }
 
-String _$dailyForecastHash() => r'2a231e17572863f6a76685c73a5ba7d0945e186b';
+String _$dailyForecastHash() => r'9cf9dc892ca21600b34caf44e1ab8186be8f5ec2';
 
 final class DailyForecastFamily extends $Family
     with

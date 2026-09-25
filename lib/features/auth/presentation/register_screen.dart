@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/error/failure_l10n.dart';
 import '../../../core/result/result.dart';
 import '../../../core/widgets/snackbars.dart';
+import '../../../l10n/l10n.dart';
 import 'auth_controller.dart';
 import 'validators.dart';
 import 'widgets/auth_form_scaffold.dart';
@@ -39,9 +41,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     setState(() => _loading = false);
     switch (result) {
       case Failed(:final failure):
-        showErrorSnackBar(context, failure.message);
+        showErrorSnackBar(context, failure.message(context.l10n));
       case Success(data: null):
-        showInfoSnackBar(context, 'Compte créé ! Confirmez votre email puis connectez-vous.');
+        showInfoSnackBar(context, context.l10n.accountCreatedConfirmEmail);
         context.go(Routes.login);
       case Success():
         break; // Session ouverte : le routeur redirige vers l'accueil.
@@ -50,9 +52,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AuthFormScaffold(
-      title: 'Créer un compte',
-      subtitle: 'Vos villes favorites, synchronisées',
+      title: l10n.registerTitle,
+      subtitle: l10n.registerSubtitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -62,26 +65,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               controller: _email,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.mail_outline)),
-              validator: validateEmail,
+              decoration: InputDecoration(labelText: l10n.emailLabel, prefixIcon: const Icon(Icons.mail_outline)),
+              validator: (v) => validateEmail(v, l10n),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _password,
               obscureText: true,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Mot de passe', prefixIcon: Icon(Icons.lock_outline)),
-              validator: validateNewPassword,
+              decoration: InputDecoration(labelText: l10n.passwordLabel, prefixIcon: const Icon(Icons.lock_outline)),
+              validator: (v) => validateNewPassword(v, l10n),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _confirm,
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirmer le mot de passe',
-                prefixIcon: Icon(Icons.lock_outline),
+              decoration: InputDecoration(
+                labelText: l10n.confirmPasswordLabel,
+                prefixIcon: const Icon(Icons.lock_outline),
               ),
-              validator: (v) => v != _password.text ? 'Les mots de passe ne correspondent pas' : null,
+              validator: (v) => v != _password.text ? l10n.passwordsDontMatch : null,
               onFieldSubmitted: (_) => _submit(),
             ),
             const SizedBox(height: 24),
@@ -89,12 +92,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               onPressed: _loading ? null : _submit,
               child: _loading
                   ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Text('Créer mon compte'),
+                  : Text(l10n.registerButton),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => context.go(Routes.login),
-              child: const Text('Déjà un compte ? Se connecter'),
+              child: Text(l10n.goToLogin),
             ),
           ],
         ),

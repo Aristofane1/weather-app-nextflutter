@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:weather_app/core/error/failure.dart';
 import 'package:weather_app/core/result/result.dart';
@@ -15,6 +16,8 @@ import 'package:weather_app/features/weather/data/weather_repository_impl.dart';
 import 'package:weather_app/features/weather/domain/weather.dart';
 import 'package:weather_app/features/weather/domain/weather_repository.dart';
 
+import '../../helpers/localized_app.dart';
+
 class MockCitiesRepository extends Mock implements CitiesRepository {}
 
 class MockWeatherRepository extends Mock implements WeatherRepository {}
@@ -23,6 +26,8 @@ void main() {
   late MockCitiesRepository cities;
   late MockWeatherRepository weather;
   const paris = City(id: 1, name: 'Paris', country: 'FR', lat: 48.85, lon: 2.35);
+
+  setUpAll(() => initializeDateFormatting());
 
   setUp(() {
     cities = MockCitiesRepository();
@@ -33,8 +38,9 @@ void main() {
         overrides: [
           citiesRepositoryProvider.overrideWithValue(cities),
           weatherRepositoryProvider.overrideWithValue(weather),
+          ...testOverrides,
         ],
-        child: const MaterialApp(home: HomeScreen()),
+        child: localizedApp(home: const HomeScreen()),
       );
 
   testWidgets('shows skeleton while favorites load', (tester) async {

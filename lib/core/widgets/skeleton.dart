@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../l10n/l10n.dart';
+
 /// Applique l'effet shimmer à un placeholder composé de [SkeletonBox].
 class Skeleton extends StatelessWidget {
   const Skeleton({super.key, required this.child});
@@ -10,10 +12,18 @@ class Skeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Shimmer.fromColors(
-      baseColor: scheme.surfaceContainerHighest,
-      highlightColor: scheme.surface,
-      child: child,
+    return Semantics(
+      label: context.l10n.loading,
+      liveRegion: true,
+      child: ExcludeSemantics(
+        child: RepaintBoundary(
+          child: Shimmer.fromColors(
+            baseColor: scheme.surfaceContainerHighest,
+            highlightColor: scheme.surface,
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 }

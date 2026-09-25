@@ -2,11 +2,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'failure.freezed.dart';
 
-/// Erreur métier affichable. Chaque variante porte son message utilisateur.
+/// Erreur métier. Le texte affiché vient de FailureL10n (lib/core/error/failure_l10n.dart).
 @freezed
 sealed class Failure with _$Failure {
-  const Failure._();
-
   const factory Failure.network() = NetworkFailure;
   const factory Failure.timeout() = TimeoutFailure;
   const factory Failure.unauthorized() = UnauthorizedFailure;
@@ -19,19 +17,4 @@ sealed class Failure with _$Failure {
   const factory Failure.offlineAction() = OfflineActionFailure;
   const factory Failure.cache() = CacheFailure;
   const factory Failure.unknown() = UnknownFailure;
-
-  String get message => switch (this) {
-        NetworkFailure() => 'Pas de connexion internet',
-        TimeoutFailure() => 'Le serveur met trop de temps à répondre',
-        UnauthorizedFailure() => 'Session expirée, reconnectez-vous',
-        InvalidCredentialsFailure() => 'Email ou mot de passe incorrect',
-        EmailAlreadyUsedFailure() => 'Cet email est déjà utilisé',
-        EmailNotConfirmedFailure() => 'Email non confirmé : cliquez sur le lien reçu par email avant de vous connecter',
-        NotFoundFailure() => 'Ressource introuvable',
-        ServerFailure(:final statusCode) => 'Erreur serveur ($statusCode)',
-        ConflictFailure() => 'Cet élément existe déjà',
-        OfflineActionFailure() => 'Action impossible hors ligne',
-        CacheFailure() => 'Données locales indisponibles',
-        UnknownFailure() => 'Une erreur inattendue est survenue',
-      };
 }

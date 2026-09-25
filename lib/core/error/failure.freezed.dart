@@ -234,8 +234,8 @@ return unknown();case _:
 /// @nodoc
 
 
-class NetworkFailure extends Failure {
-  const NetworkFailure(): super._();
+class NetworkFailure implements Failure {
+  const NetworkFailure();
   
 
 
@@ -266,8 +266,8 @@ String toString() {
 /// @nodoc
 
 
-class TimeoutFailure extends Failure {
-  const TimeoutFailure(): super._();
+class TimeoutFailure implements Failure {
+  const TimeoutFailure();
   
 
 
@@ -298,8 +298,8 @@ String toString() {
 /// @nodoc
 
 
-class UnauthorizedFailure extends Failure {
-  const UnauthorizedFailure(): super._();
+class UnauthorizedFailure implements Failure {
+  const UnauthorizedFailure();
   
 
 
@@ -330,8 +330,8 @@ String toString() {
 /// @nodoc
 
 
-class InvalidCredentialsFailure extends Failure {
-  const InvalidCredentialsFailure(): super._();
+class InvalidCredentialsFailure implements Failure {
+  const InvalidCredentialsFailure();
   
 
 
@@ -362,8 +362,8 @@ String toString() {
 /// @nodoc
 
 
-class EmailAlreadyUsedFailure extends Failure {
-  const EmailAlreadyUsedFailure(): super._();
+class EmailAlreadyUsedFailure implements Failure {
+  const EmailAlreadyUsedFailure();
   
 
 
@@ -394,8 +394,8 @@ String toString() {
 /// @nodoc
 
 
-class EmailNotConfirmedFailure extends Failure {
-  const EmailNotConfirmedFailure(): super._();
+class EmailNotConfirmedFailure implements Failure {
+  const EmailNotConfirmedFailure();
   
 
 
@@ -426,8 +426,8 @@ String toString() {
 /// @nodoc
 
 
-class NotFoundFailure extends Failure {
-  const NotFoundFailure(): super._();
+class NotFoundFailure implements Failure {
+  const NotFoundFailure();
   
 
 
@@ -458,8 +458,8 @@ String toString() {
 /// @nodoc
 
 
-class ServerFailure extends Failure {
-  const ServerFailure(this.statusCode): super._();
+class ServerFailure implements Failure {
+  const ServerFailure(this.statusCode);
   
 
  final  int statusCode;
@@ -524,8 +524,8 @@ as int,
 /// @nodoc
 
 
-class ConflictFailure extends Failure {
-  const ConflictFailure(): super._();
+class ConflictFailure implements Failure {
+  const ConflictFailure();
   
 
 
@@ -556,8 +556,8 @@ String toString() {
 /// @nodoc
 
 
-class OfflineActionFailure extends Failure {
-  const OfflineActionFailure(): super._();
+class OfflineActionFailure implements Failure {
+  const OfflineActionFailure();
   
 
 
@@ -588,8 +588,8 @@ String toString() {
 /// @nodoc
 
 
-class CacheFailure extends Failure {
-  const CacheFailure(): super._();
+class CacheFailure implements Failure {
+  const CacheFailure();
   
 
 
@@ -620,8 +620,8 @@ String toString() {
 /// @nodoc
 
 
-class UnknownFailure extends Failure {
-  const UnknownFailure(): super._();
+class UnknownFailure implements Failure {
+  const UnknownFailure();
   
 
 

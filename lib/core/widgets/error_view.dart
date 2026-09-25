@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
+
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key, required this.message, this.onRetry});
 
@@ -17,10 +19,13 @@ class ErrorView extends StatelessWidget {
           children: [
             Icon(Icons.cloud_off_rounded, size: 48, color: theme.colorScheme.error),
             const SizedBox(height: 12),
-            Text(message, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
+            Semantics(
+              liveRegion: true,
+              child: Text(message, textAlign: TextAlign.center, style: theme.textTheme.bodyLarge),
+            ),
             if (onRetry != null) ...[
               const SizedBox(height: 16),
-              FilledButton.tonal(onPressed: onRetry, child: const Text('Réessayer')),
+              FilledButton.tonal(onPressed: onRetry, child: Text(context.l10n.retry)),
             ],
           ],
         ),

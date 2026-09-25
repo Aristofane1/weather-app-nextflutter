@@ -1,5 +1,15 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Variable obligatoire absente ou vide dans `.env` (message traduit par `ConfigErrorApp`).
+class MissingEnvKey implements Exception {
+  const MissingEnvKey(this.key);
+
+  final String key;
+
+  @override
+  String toString() => 'MissingEnvKey($key)';
+}
+
 /// Accès typé aux variables du fichier `.env` (chargé dans `main`).
 abstract final class Env {
   static String get supabaseUrl => _require('SUPABASE_URL');
@@ -16,7 +26,7 @@ abstract final class Env {
   static String _require(String key) {
     final value = dotenv.maybeGet(key);
     if (value == null || value.isEmpty) {
-      throw StateError('Variable $key manquante dans .env (voir .env.example)');
+      throw MissingEnvKey(key);
     }
     return value;
   }

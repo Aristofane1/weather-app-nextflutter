@@ -11,6 +11,8 @@ import 'package:weather_app/features/auth/domain/app_user.dart';
 import 'package:weather_app/features/auth/domain/auth_repository.dart';
 import 'package:weather_app/features/auth/presentation/login_screen.dart';
 
+import '../../helpers/localized_app.dart';
+
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
@@ -26,7 +28,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(repo),
           sessionEventsProvider.overrideWithValue(SessionEvents()),
         ],
-        child: const MaterialApp(home: LoginScreen()),
+        child: localizedApp(home: const LoginScreen()),
       ));
 
   testWidgets('invalid form shows errors and does not call API', (tester) async {
@@ -51,5 +53,21 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Email ou mot de passe incorrect'), findsOneWidget);
+  });
+
+  testWidgets('shows english validation errors', (tester) async {
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(repo),
+        sessionEventsProvider.overrideWithValue(SessionEvents()),
+      ],
+      child: localizedApp(home: const LoginScreen(), locale: const Locale('en')),
+    ));
+    await tester.enterText(find.byKey(const Key('login_email')), 'abc');
+    await tester.tap(find.widgetWithText(FilledButton, 'Sign in'));
+    await tester.pump();
+
+    expect(find.text('Invalid email'), findsOneWidget);
+    expect(find.text('Password is required'), findsOneWidget);
   });
 }

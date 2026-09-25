@@ -54,6 +54,98 @@ final class CacheStoreProvider
 
 String _$cacheStoreHash() => r'd68db7845970b06c77c2a45cd003925c6ba189cf';
 
+/// Surchargé dans `main()` avec la box Hive `settings`.
+
+@ProviderFor(settingsStore)
+final settingsStoreProvider = SettingsStoreProvider._();
+
+/// Surchargé dans `main()` avec la box Hive `settings`.
+
+final class SettingsStoreProvider
+    extends $FunctionalProvider<SettingsStore, SettingsStore, SettingsStore>
+    with $Provider<SettingsStore> {
+  /// Surchargé dans `main()` avec la box Hive `settings`.
+  SettingsStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'settingsStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsStore create(Ref ref) {
+    return settingsStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsStore>(value),
+    );
+  }
+}
+
+String _$settingsStoreHash() => r'aaac048c2a794d36fdb891e3fcd056c0cf4e2b23';
+
+/// Langue envoyée à OWM : choix de l'utilisateur, sinon langue de l'appareil (fr/en).
+
+@ProviderFor(apiLanguage)
+final apiLanguageProvider = ApiLanguageProvider._();
+
+/// Langue envoyée à OWM : choix de l'utilisateur, sinon langue de l'appareil (fr/en).
+
+final class ApiLanguageProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  /// Langue envoyée à OWM : choix de l'utilisateur, sinon langue de l'appareil (fr/en).
+  ApiLanguageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'apiLanguageProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$apiLanguageHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return apiLanguage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$apiLanguageHash() => r'4b1d316a5fd0636ca41fd1e06e1fb64ca66ec1cc';
+
 @ProviderFor(networkInfo)
 final networkInfoProvider = NetworkInfoProvider._();
 
@@ -305,4 +397,56 @@ final class OwmDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$owmDioHash() => r'4b19790cab0889a171aaf19f56e3b6eb0ef772d0';
+String _$owmDioHash() => r'95e52de8fa69fb3f890fd913264f6a2e2f20b3c7';
+
+/// Cache disque des icônes météo. `null` = pas d'image réseau (tests) : icône de repli.
+
+@ProviderFor(iconCacheManager)
+final iconCacheManagerProvider = IconCacheManagerProvider._();
+
+/// Cache disque des icônes météo. `null` = pas d'image réseau (tests) : icône de repli.
+
+final class IconCacheManagerProvider
+    extends
+        $FunctionalProvider<
+          BaseCacheManager?,
+          BaseCacheManager?,
+          BaseCacheManager?
+        >
+    with $Provider<BaseCacheManager?> {
+  /// Cache disque des icônes météo. `null` = pas d'image réseau (tests) : icône de repli.
+  IconCacheManagerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'iconCacheManagerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$iconCacheManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<BaseCacheManager?> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  BaseCacheManager? create(Ref ref) {
+    return iconCacheManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BaseCacheManager? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BaseCacheManager?>(value),
+    );
+  }
+}
+
+String _$iconCacheManagerHash() => r'dc675e7b4710f842f988d6ab3edec6b6be47af8e';

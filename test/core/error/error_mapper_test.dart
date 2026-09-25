@@ -4,6 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weather_app/core/error/error_mapper.dart';
 import 'package:weather_app/core/error/failure.dart';
+import 'package:weather_app/core/error/failure_l10n.dart';
+
+import '../../helpers/localized_app.dart';
 
 DioException dioError(DioExceptionType type, {int? status, Object? data, Object? error}) {
   final options = RequestOptions(path: '/x');
@@ -35,7 +38,7 @@ void main() {
         status: 400, data: {'error_code': 'invalid_credentials', 'msg': 'Invalid login credentials'});
     final failure = failureFromDio(e);
     expect(failure, isA<InvalidCredentialsFailure>());
-    expect(failure.message, 'Email ou mot de passe incorrect');
+    expect(failure.message(l10nFr), 'Email ou mot de passe incorrect');
   });
 
   test('supabase user already exists -> emailAlreadyUsed', () {
@@ -49,7 +52,7 @@ void main() {
         status: 400, data: {'code': 400, 'error_code': 'email_not_confirmed', 'msg': 'Email not confirmed'});
     final failure = failureFromDio(e);
     expect(failure, isA<EmailNotConfirmedFailure>());
-    expect(failure.message, 'Email non confirmé : cliquez sur le lien reçu par email avant de vous connecter');
+    expect(failure.message(l10nFr), 'Email non confirmé : cliquez sur le lien reçu par email avant de vous connecter');
   });
 
   test('status codes -> unauthorized / notFound / server', () {
@@ -57,13 +60,13 @@ void main() {
     expect(failureFromDio(dioError(DioExceptionType.badResponse, status: 404)), isA<NotFoundFailure>());
     final server = failureFromDio(dioError(DioExceptionType.badResponse, status: 503));
     expect(server, const Failure.server(503));
-    expect(server.message, 'Erreur serveur (503)');
+    expect(server.message(l10nFr), 'Erreur serveur (503)');
   });
 
   test('409 -> conflict', () {
     final failure = failureFromDio(dioError(DioExceptionType.badResponse, status: 409));
     expect(failure, isA<ConflictFailure>());
-    expect(failure.message, 'Cet élément existe déjà');
+    expect(failure.message(l10nFr), 'Cet élément existe déjà');
   });
 
   test('toFailure keeps Failure and maps unknown errors', () {

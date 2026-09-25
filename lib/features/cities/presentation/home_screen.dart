@@ -7,6 +7,7 @@ import '../../../core/widgets/empty_view.dart';
 import '../../../core/widgets/result_view.dart';
 import '../../../core/widgets/scrollable_fill.dart';
 import '../../../core/widgets/skeleton.dart';
+import '../../../l10n/l10n.dart';
 import '../../weather/presentation/weather_providers.dart';
 import 'cities_providers.dart';
 import 'widgets/city_weather_tile.dart';
@@ -16,12 +17,13 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mes villes'),
+        title: Text(l10n.homeTitle),
         actions: [
           IconButton(
-            tooltip: 'Profil',
+            tooltip: l10n.profileTooltip,
             icon: const Icon(Icons.person_outline),
             onPressed: () => context.push(Routes.profile),
           ),
@@ -30,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(Routes.search),
         icon: const Icon(Icons.add_location_alt_outlined),
-        label: const Text('Ajouter'),
+        label: Text(l10n.addCityFab),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -48,10 +50,10 @@ class HomeScreen extends ConsumerWidget {
               ? ScrollableFill(
                   child: EmptyView(
                     icon: Icons.location_city_outlined,
-                    message: 'Aucune ville favorite pour le moment',
+                    message: l10n.noFavorites,
                     action: FilledButton(
                       onPressed: () => context.push(Routes.search),
-                      child: const Text('Ajouter une ville'),
+                      child: Text(l10n.addCityButton),
                     ),
                   ),
                 )
@@ -59,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
                   itemCount: cities.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 12),
                   itemBuilder: (_, i) => CityWeatherTile(city: cities[i]),
                 ),
         ),

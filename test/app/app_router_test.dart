@@ -15,6 +15,7 @@ import 'package:weather_app/features/cities/data/cities_repository_impl.dart';
 import 'package:weather_app/features/cities/domain/cities_repository.dart';
 import 'package:weather_app/features/cities/domain/city.dart';
 import 'package:weather_app/features/cities/presentation/home_screen.dart';
+import 'package:weather_app/l10n/l10n.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -23,6 +24,8 @@ class MockCitiesRepository extends Mock implements CitiesRepository {}
 void main() {
   for (final location in ['/city?lat=abc&lon=2.35', '/city?lon=2.35', '/city?lat=48.85&lon=']) {
     testWidgets('malformed city URL $location redirects to home', (tester) async {
+      tester.platformDispatcher.localesTestValue = const [Locale('fr')];
+      addTearDown(tester.platformDispatcher.clearLocalesTestValue);
       final auth = MockAuthRepository();
       final cities = MockCitiesRepository();
       final favorites = StreamController<Result<List<City>>>();
@@ -40,7 +43,11 @@ void main() {
 
       await tester.pumpWidget(UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: router),
+        child: MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ));
       await tester.pump();
       await tester.pump();

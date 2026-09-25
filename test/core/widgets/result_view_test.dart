@@ -5,8 +5,10 @@ import 'package:weather_app/core/error/failure.dart';
 import 'package:weather_app/core/result/result.dart';
 import 'package:weather_app/core/widgets/result_view.dart';
 
+import '../../helpers/localized_app.dart';
+
 void main() {
-  Widget host(AsyncValue<Result<String>> value, {VoidCallback? onRetry}) => MaterialApp(
+  Widget host(AsyncValue<Result<String>> value, {VoidCallback? onRetry}) => localizedApp(
         home: Scaffold(
           body: ResultView<String>(
             value: value,
